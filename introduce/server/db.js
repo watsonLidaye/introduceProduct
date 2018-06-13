@@ -4,7 +4,7 @@ module.exports = {
 		host: "localhost",
 		user: "root",
 		password: "123456",
-		database: "01_first",
+		database: "introduce",
 		port: "3306"
 	}
 }
