@@ -2,7 +2,7 @@
 var sqlMap = {
 	// 用户
 	user: {
-		add: 'insert into 01_first(id, name, sex) values (0, ?, ?)'
+		logo: 'select * from user whrere suudent_code='
 	}
 }
 
