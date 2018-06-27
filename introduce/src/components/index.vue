@@ -1,4 +1,9 @@
 <style scoped>
+#index{
+  width: 7.5rem;
+  margin:0 auto;
+  position: relative;
+}
 .header{
   width: 100%;
   height: 4.25rem;
@@ -22,7 +27,7 @@
  height: 100%;
  line-height: .88rem;
  border-radius: .44rem;
- border: .03rem solid #ddd;
+ border: .01rem solid #ddd;
  box-sizing: border-box;
 }
 .inputSearch input:focus{
@@ -59,47 +64,109 @@ button:focus{
 .act{
  background:#038adc;
 }
+.logo_bottom{
+  width: 7.5rem;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  text-align: center;
+  padding-bottom: .3rem;
+}
+.logo_bottom img{
+  width: 1.85rem;
+  height: .48rem;
+}
+.map_plate{
+  height: 3rem;
+}
 </style>
 <template>
-  <div id="index">
+  <div id="index" :style="{height:heights+'px'}">
     <div class="header"></div>
     <div class="inputSearch">
-      <input type="number" name="code" placeholder="请输入学号" maxlength="14" autocomplete="off" v-model="inputValue" >
+      <input type="number" name="code" placeholder="请输入缴费编号"  autocomplete="off" v-model="inputValue" >
       <div class="inputLogo">
         <img src="../assets/05.png">
       </div>
     </div>
     <button :class="{'act':allow_click}" @click="nextOp()">下一步</button>
-  </div>
+    <div class="logo_bottom">
+      <img src="http://e2862-wx-app.oss-cn-hangzhou.aliyuncs.com/storeCustomer/customer/default/module/logo.png">
+    </div>
+  </el-amap>
 </div>
+
+
 </template>
 
 <script>
+  import config from '../assets/js/api.js'
   export default {
     name: 'index',
     data () {
       return {
        allow_click:false,
-       inputValue:""
+       inputValue:"",
+       heights:""
      }
    },
    watch:{
      inputValue:{
       handler(val,oldval){
-       this.allow_click=val.length>12?true:false
+       this.allow_click=val.length>=5?true:false
      },
      deep:true
-      }
-    },
-    methods: {
-        nextOp(){
-          if(this.allow_click){
-              this.inputValue="",
-              this.$router.push({path:'/main_plate'})
-          }
-        },
-       }
+   }
+ },
+created(){
+  this.heights=document.documentElement.clientHeight
+},
+ methods: {
+  nextOp(){
+    this.$layer.loading('登陆中...')
+    let appId =config.appid
+    let formData={}
+    formData.studentCode = this.inputValue
+    if(this.allow_click){
+      this.inputValue="",
+      this.$http.post(config.url+config.api.index,{
+        appId,
+        formData
+      },{}).then((response)=>{
+        if(response.body.status=='success'){
+          this.$layer.toast({
+            icon: 'icon-check',
+            content: '欢迎回来',
+            time: 1000 // 自动消失时间 toast类型默认消失时间为2000毫秒
+            });
+          let info = JSON.stringify(response.body.data)
+          this.$localStorage.set('info',info )
+          setTimeout(()=>{
+            this.$router.push({
+              name:"main_plate"
+            })},1000)
+        }else{
+          this.$layer.open({
+            title: [
+            '温馨提示',
+            'background-color: #038adc; color:#fff;'
+            ]
+            ,content: response.body.info
+          });
+        }
+      },(response)=>{
+        this.$layer.open({
+          title: [
+          '温馨提示',
+          'background-color: #038adc; color:#fff;'
+          ]
+          ,content: response.body.info
+        });
+      });
     }
+  },
+}
+}
 </script>
 
 

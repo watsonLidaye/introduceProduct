@@ -38,13 +38,13 @@
 </style>
 <template>
   <div id="list">
-    <div class=" bottom_item" v-if="list.length">
-        <div class="bottom_main"  v-for="item in list">
+    <div class=" bottom_item" v-if="detail&&detail.length">
+        <div class="bottom_main"  v-for="item in detail">
           <p class="main_left">{{item.time}}</p>
           <p class="main_right">缴费金额{{item.cost}}元</p>
         </div>
     </div>
-    <div v-if="list.length==0">
+    <div v-else>
       <img class="empty_logo" src="../assets/07.png">
       <div>暂无缴费记录</div>
     </div>
@@ -52,17 +52,31 @@
 
 </template>
 <script>
+  import config from '../assets/js/api.js'
   export default {
     name: 'list',
     data () {
       return {
-        list:[
-          // {time:'2018-05-13',cost:'5000'},
-          // {time:'2018-05-13',cost:'5000'},
-        ]
+          detail:[],
+        }
+    },
+  created(){
+    this.$layer.loading('加载中...')
+    let appId=config.appid
+    let formData={}
+    formData.studentCode = JSON.parse(this.$localStorage.get('info')).studentCode
+    this.$http.post(config.url+config.api.list,{
+      appId,
+      formData
+    },{}).then((response)=>{
+          if(response.body.status=='success'){
+            this.detail=response.body.data
+             this.$layer.close();
+            }
+          }
+    )
+    },
     }
-  }
-  }
 </script>
 
 
