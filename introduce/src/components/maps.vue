@@ -38,6 +38,7 @@
 		},
 		created(){
 			//取值
+			 this.$layer.loading('加载中...')
 			console.log(window.lib)
 			if(!this.$route.params.name){
 				this.$router.push({
@@ -59,6 +60,7 @@
 			    // 高德 sdk 版本，默认为 1.4.4
 			    v: '1.4.4'
 			})
+			this.$layer.close();
 		},
 		methods:{
 			gothere(){

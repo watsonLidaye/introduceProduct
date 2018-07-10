@@ -118,6 +118,9 @@
 .pb200{
   padding-bottom: 4rem;
 }
+.show_false{
+  background: #dadfe1
+}
 </style>
 <template>
   <div id="main_plate">
@@ -202,7 +205,7 @@
       <!-- 底部结算部分 -->
       <div class="bottom">
         <div class="bottom_Operation">
-          <div class="pay">立即支付</div>
+          <div class="pay" :class="{'show_false':info.paidFee.total==0}" @click="payment()">立即支付</div>
           <router-link :to="{path:'/list'}" class="pay goList">缴费记录</router-link>
         </div>
         <router-link :to="{path:'/introduce'}" class="bottom_logo">
@@ -214,6 +217,7 @@
 
 </template>
 <script>
+  import config from '../assets/js/api.js'
   export default {
     name: 'main_plate',
     data () {
@@ -245,6 +249,45 @@
       showDetail(){
         if(this.info.paidFee.total>0){
           this.detail_info.show=!this.detail_info.show
+        }
+      },
+      payment(){
+        this.$layer.loading('支付中...')
+        let formData={}
+        let appId =config.appid
+        formData.studentCode=this.info.studentCode
+        formData.paymentFee=this.info.paidFee.total
+        formData.paymentItem={}
+        formData.paymentItem.foodFee=this.info.paidFee.detail.foodFee
+        formData.paymentItem.teachingMaterialsFee=this.info.paidFee.detail.teachingMaterialsFee
+        formData.paymentItem.exerciseBookFee=this.info.paidFee.detail.exerciseBookFee
+        formData.paymentItem.schoolServiceFee=this.info.paidFee.detail.schoolServiceFee
+        formData.paymentItem.otherFee=this.info.paidFee.detail.otherFee
+        if(this.info.paidFee.total>0){
+          this.$http.post(config.url+config.api.payment,{
+            appId,
+            formData
+          },{}).then((response)=>{
+            if(response.body.status=='success'){
+              let info = JSON.parse(JSON.stringify(response.body.data))
+              console.log(info.payurl)
+              window.location.href=info.payurl
+            }else{
+              console.log(response.body.info)
+             this.$layer.toast({
+              icon: 'icon-check',
+              content: '支付失败,请重新支付',
+            time: 1000 // 自动消失时间 toast类型默认消失时间为2000毫秒
+          });
+           }
+         },(response)=>{
+           console.log(response.body)
+           this.$layer.toast({
+            icon: 'icon-check',
+            content: '支付失败,请重新支付',
+            time: 1000 // 自动消失时间 toast类型默认消失时间为2000毫秒
+          });
+         });
         }
       }
     }

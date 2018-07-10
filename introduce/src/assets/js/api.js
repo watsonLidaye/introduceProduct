@@ -1,12 +1,13 @@
 var api = {
 	index: "school/index/index",
 	aboutUs: "school/index/aboutUS",
-	list: "school/index/paymentRecord"
+	list: "school/index/paymentRecord",
+	payment: "School/Payment/ibsCCB",
 }
-var url = "https://i.e2862.com/"
+var url = "https://api.e2862.com/"
 // 		master: "https://api.e2862.com/",
 // 		debug: "https://i.e2862.com/"
-var appid = "wxaaa2807e6a74ed2f"
+var appid = "wxdc0f3cf8f755fbec"
 module.exports = {
 	url: url,
 	api: api,

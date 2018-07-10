@@ -16,19 +16,26 @@
   width: 6rem;
   height: .88rem;
   font-size: .28rem;
-  box-sizing: border-box;
+ border: .01rem solid #ddd;
+   border-radius: .44rem;
   margin: 0 auto .78rem;
-
   position: relative;
+  display: flex;
+  align-items: center;
+}
+.input_box{
+  padding:0rem .88rem ;
+ width:100%;
+height: .3rem;
+border:0;
+   border-radius: .44rem;
+ box-sizing: border-box;
+ outline:none;
+  -webkit-appearance: none;
+   --webkit-tap-highlight-color: rgba(0,0,0,0)
 }
 .inputSearch input{
- padding:0rem .88rem ;
- width:100%;
- height: 100%;
- line-height: .88rem;
- border-radius: .44rem;
- border: .01rem solid #ddd;
- box-sizing: border-box;
+
 }
 .inputSearch input:focus{
   outline: 0
@@ -51,7 +58,7 @@ button{
   width: 2.7rem;
   height: .88rem;
   display: block;
-  margin: 0 auto;
+  margin:  0 auto;
   color: #fff;
   background:#dcdfe1;
   border:0;
@@ -84,7 +91,7 @@ button:focus{
   <div id="index" :style="{height:heights+'px'}">
     <div class="header"></div>
     <div class="inputSearch">
-      <input type="number" name="code" placeholder="请输入缴费编号"  autocomplete="off" v-model="inputValue" >
+      <input type="number" class="input_box" name="code" placeholder="请输入缴费编号"  autocomplete="off" v-model="inputValue" >
       <div class="inputLogo">
         <img src="../assets/05.png">
       </div>

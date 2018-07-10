@@ -29,6 +29,10 @@ export default new Router({
 		name: 'index',
 		component: index
 	}, {
+		path: '/index',
+		name: 'index',
+		component: index
+	}, {
 		path: '/main_plate/',
 		name: 'main_plate',
 		component: main_plate
@@ -44,5 +48,13 @@ export default new Router({
 		path: '/maps',
 		name: 'maps',
 		component: maps
-	}]
+	}, {
+		path: '*',
+		component: index
+	}, {
+		path: '/',
+		redirect: {
+			name: "index"
+		}
+	}, ]
 })
